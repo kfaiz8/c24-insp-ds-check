@@ -195,7 +195,8 @@ def chart_monthly_trend(_row_counts, sel_months_t):
     tot  = df.groupby("MONTH_LABEL", observed=True)["row_cnt"].sum().reset_index(name="total")
     good = (df[df["DS_OUTPUT"] == 0]
             .groupby("MONTH_LABEL", observed=True)["row_cnt"].sum().reset_index(name="good"))
-    m = tot.merge(good, on="MONTH_LABEL", how="left").fillna(0)
+    m = tot.merge(good, on="MONTH_LABEL", how="left")
+    m["good"] = m["good"].fillna(0)
     m["pct"] = np.where(m["total"] > 0, m["good"] / m["total"] * 100, 0)
     m = m.sort_values("MONTH_LABEL")
     fig = px.line(
